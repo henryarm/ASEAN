@@ -1,0 +1,104 @@
+{
+  "money": [
+    {
+      "id": 1,
+      "money_image_a": "brunei_money_1",
+      "money_image_b": "brunei_money_2",
+      "money_detail_1": "ดอลล่าร์บรูไน ดารุสซาลาม เป็นสกุลเงินของประเทศบรูไนดารุสซาลาม",
+      "money_detail_2": "*1 ดอลล่าร์บรูไน เท่ากับประมาณ  25 บาทไทย",
+      "money_detail_3": "The Brunei Dollar (BND) is the official currency of Brunei Darussalam.",
+      "money_detail_4": "The current exchange rate of the Brunei Dollar (BND) to the Thai Baht (THB) is approximately 1 BND to 25 THB.",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 1 ดอลลาร์, 5 ดอลลาร์, 10 ดอลลาร์, 20 ดอลลาร์ , 25 ดอลลาร์, 50 ดอลลาร์, 100 ดอลลาร์, 500 ดอลลาร์ , 1,000 ดอลลาร์ และ 10,000 ดอลลาร์"
+    },
+    {
+      "id": 2,
+      "money_image_a": "cambodia_money_1",
+      "money_image_b": "cambodia_money_2",
+      "money_detail_1": " เรียล (Riel) เป็นสกุลเงินของประเทศกัมพูชา",
+      "money_detail_2": "*127 เรียล เท่ากับประมาณ 1 บาท ",
+      "money_detail_3": "The Cambodian Riel (KHR) is the official currency of Cambodia.",
+      "money_detail_4": "127 Cambodian Riel = 1 Thai Baht",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 50 เรียล 100 เรียล 200 เรียล  500 เรียล 1,000 เรียล 2,000  เรียล  5,000  เรียล  10,000  เรียล  20,000  เรียล 50,000  เรียล และ 100,000  เรียล"
+    },
+    {
+      "id": 3,
+      "money_image_a": "indonesia_money_1",
+      "money_image_b": "indonesia_money_2",
+      "money_detail_1": "รูเปียห์ (Rupiah) เป็นสกุลเงินของประเทศอินโดนีเซีย",
+      "money_detail_2": "* 1,000 รูเปียห์ เท่ากับประมาณ 3 บาท",
+      "money_detail_3": "The Indonesian Rupiah (IDR) is the official currency of Indonesia.",
+      "money_detail_4": "1000 Indonesian Rupiah = 3 Thai Baht",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 1,000 รูเปียห์,  2,000 รูเปียห์ ,  5,000 รูเปียห์,  10,000 รูเปียห์,  20,000  รูเปียห์ 50,000 รูเปียห์และ 100,000 รูเปียห์"
+    },
+    {
+      "id": 4,
+      "money_image_a": "ic_default",
+      "money_image_b": "ic_default",
+      "money_detail_1": "Mnlao1-เงิน- กีบ (Kip) เป็นสกุลเงินของประเทศลาว",
+      "money_detail_2": "The Lao Kip (LAK) is the official currency of Laos.",
+      "money_detail_3": "* 1,000 กีบ เท่ากับประมาณ  4 บาทไทย",
+      "money_detail_4": "1000 Lao Kip = 4 Thai Baht",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 500 กีบ, 1,000 กีบ, 2,000 กีบ, 5,000 กีบ, 10,000 กีบ, 20,000 กีบ และ 50,000 กีบ"
+    },
+    {
+      "id": 5,
+      "money_image_a": "malaysia_money_1",
+      "money_image_b": "malaysia_money_2",
+      "money_detail_1": "ริงกิต (Ringgit) เป็นสกุลเงินของประเทศมาเลเซีย",
+      "money_detail_2": "1  ริงกิตมาเลเซียเท่ากับประมาณ 10 บาท",
+      "money_detail_3": "The Malaysian Ringgit (MYR) is the official currency of Malaysia.",
+      "money_detail_4": "*1 Malaysian Ringgit approximately equals 10 Thai Baht",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 1 ริงกิต, 5 ริงกิต , 10 ริงกิต, 20  ริงกิต, 50 ริงกิต และ 100 ริงกิต"
+    },
+    {
+      "id": 6,
+      "money_image_a": "myanmar_money_1",
+      "money_image_b": "myanmar_money_2",
+      "money_detail_1": "จ๊าด (Kyat) เป็นสกุลเงินของประเทศพม่า",
+      "money_detail_2": "* 26 จ๊าดเท่ากับประมาณ 1 บาทไทย",
+      "money_detail_3": "The Myanmar Kyat (MMK) is the official currency of Myanmar.",
+      "money_detail_4": "26.0460 Myanmar Kyat = 1 Thai baht",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 50 ปยา, 1 จ๊าด, 5 จ๊าด, 20 จ๊าด, 50 จ๊าด, 100 จ๊าด, 200 จ๊าด, 500 จ๊าด, 1,000 จ๊าด , 5,000 จ๊าด และ 10,000 จ๊าด"
+    },
+    {
+      "id": 7,
+      "money_image_a": "philipines_money_1",
+      "money_image_b": "philipines_money_2",
+      "money_detail_1": "เปโซ (Peso) เป็นสกุลเงินของประเทศฟิลิปปินส์",
+      "money_detail_2": "*1.40 เปโซ เท่ากับประมาณ 1 บาท",
+      "money_detail_3": "The Philippine Peso (PHP) is the official currency of the Philippines.",
+      "money_detail_4": "1.40 Philippine Peso = 1 Thai Baht",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 20 เปโซ, 50  เปโซ, 100  เปโซ , 200  เปโซ, 500  เปโซ และ 1,000  เปโซ"
+    },
+    {
+      "id": 8,
+      "money_image_a": "singapore_money_1",
+      "money_image_b": "singapore_money_2",
+      "money_detail_1": "ดอลลาร์ (Dollar) เป็นสกุลเงินของประเทศสิงคโปร์",
+      "money_detail_2": "* 1 ดอลล่าร์สิงคโปร์ เท่ากับประมาณ 25 บาท",
+      "money_detail_3": "The Singapore Dollar (SGD) is the official currency of Singapore.",
+      "money_detail_4": "1 Singapore Dollar approximately equals 25 Thai Baht.",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 2 ดอลลาร์, 5 ดอลลาร์ , 10 ดอลลาร์ , 50 ดอลลาร์, 100 ดอลลาร์, 1,000 ดอลลาร์ และ 10,000 ดอลลาร์"
+    },
+    {
+      "id": 9,
+      "money_image_a": "vietnam_money_1",
+      "money_image_b": "vietnam_money_2",
+      "money_detail_1": " ด่ง (Dong) เป็นสกุลเงินของประเทศเวียดนาม",
+      "money_detail_2": "* 652 ด่ง เท่ากับประมาณ  1  บาทไทย",
+      "money_detail_3": "The Vietnamese Dong (VND) is the official currency of Vietnam.",
+      "money_detail_4": "652 Vietnamese Dong = 1 Thai Baht",
+      "money_detail_5": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 1,000 ด่ง 2,000 ด่ง 5,000 ด่ง 10,000 20,000 ด่ง 50,000 ด่ง 100,000 ด่ง 200,000 ด่ง และ 500,000 ด่ง "
+    },
+    {
+      "id": 10,
+      "money_image_a": "thailand_money_1",
+      "money_image_b": "thailand_money_2",
+      "money_detail_1": "บาท (Baht) เป็นสกุลเงินของประเทศไทย",
+      "money_detail_2": "The Thai Baht (THB) is the  official currency of Thailand. ",
+      "money_detail_3": "ธนบัตรที่พิมพ์ออกใช้ในปัจจุบันนี้มีฉบับละ 20 บาท, 50 บาท , 100 บาท , 500 บาท และ 1,000 บาท",
+      "money_detail_4": "",
+      "money_detail_5": ""
+    }
+  ]
+}

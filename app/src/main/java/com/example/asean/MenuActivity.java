@@ -33,11 +33,11 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        asean = Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.ASIAN));
+        asean = Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.ASEAN));
 
-        Log.d(TAG, asean.getMoney().getItem_money_a());
-
-        Log.d(TAG, asean.getMoney().getItem_money_name());
+//        Log.d(TAG, asean.getMoney().getItem_money_a());
+//
+//        Log.d(TAG, asean.getMoney().getItem_money_name());
         initView();
     }
 

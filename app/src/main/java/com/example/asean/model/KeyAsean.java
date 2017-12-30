@@ -5,7 +5,8 @@ package com.example.asean.model;
  */
 
 public class KeyAsean {
-    public static final String ASIAN = "ASIAN";
+    public static final String ASEAN = "ASIAN";
+    public static final String ASEAN_ID = "ID";
     public static final String FOOD = "FOOD";
     public static final String MONEY = "MONEY";
     public static final String TRAVEL = "TRAVEL";

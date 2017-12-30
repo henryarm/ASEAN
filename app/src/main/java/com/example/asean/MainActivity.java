@@ -10,22 +10,40 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.asean.adapter.AseanAdapter;
+import com.bumptech.glide.Glide;
+//import com.example.asean.adapter.AseanAdapter;
 import com.example.asean.adapter.AseanItemAdapter;
-import com.example.asean.adapter.RealmAseanAdapter;
+//import com.example.asean.adapter.RealmAseanAdapter;
+import com.example.asean.adapter.AseanViewHolder;
 import com.example.asean.app.Prefs;
 import com.example.asean.model.Asean;
 import com.example.asean.model.AseanItem;
 import com.example.asean.model.AseanItemMoney;
 import com.example.asean.model.KeyAsean;
-import com.example.asean.realm.RealmController;
-import com.squareup.picasso.Picasso;
+//import com.example.asean.realm.RealmController;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+//import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,17 +55,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
+//import io.realm.Realm;
+//import io.realm.RealmList;
+//import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private SearchView searchView;
-    private AseanAdapter adapter;
-    private Realm realm;
+    //    private AseanAdapter adapter;
+//    private Realm realm;
     private RecyclerView recycler;
+    private FirebaseRecyclerAdapter<Asean, AseanViewHolder> mFirebaseAdapter;
 
 
     @Override
@@ -55,182 +74,106 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.realm = RealmController.with(this).getRealm();
+//        this.realm = RealmController.with(this).getRealm();
         recycler = (RecyclerView) findViewById(R.id.RecyclerAsean);
         //        searchView = (SearchView) findViewById(R.id.simpleSearchView);
 
-        if (!Prefs.with(this).getPreLoad()) {
-            setRealmData();
-        }
+        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mRef = mRootRef.child("asean");
+        final FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        setupRecycler();
-        RealmController.with(this).refresh();
-        setRealmAdapter(RealmController.with(this).getAseans());
-    }
+//        mRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+////                String value = dataSnapshot.getValue(String.class);
+////                Log.d(TAG,"NAME"+ dataSnapshot.getChildren().toString());
+//                for (DataSnapshot data:dataSnapshot.getChildren()) {
+//                    AseanTest name = data.getValue(AseanTest.class);
+//                    Log.d(TAG, name.getName());
+//                    for (DataSnapshot foods: data.child("food").getChildren()){
+//                        AseanItemTest food = foods.getValue(AseanItemTest.class);
+//                    }
+//                }
+////                mTextView.setText(value);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+////                mTextView.setText("Failed: " + databaseError.getMessage());
+//            }
+//        });
 
-    private void setupRecycler() {
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recycler.setHasFixedSize(true);
-
-        // use a linear layout manager since the cards are vertically scrollable
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setLayoutManager(layoutManager);
-
-        // create an empty adapter and add it to the recycler view
-        adapter = new AseanAdapter(this);
-        adapter.setOnclickItem(new AseanAdapter.OnClickAseanListener() {
+        FirebaseRecyclerOptions<Asean> options = new FirebaseRecyclerOptions.Builder<Asean>()
+                .setQuery(mRef, Asean.class)
+                .build();
+        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+//        mLinearLayoutManager.setStackFromEnd(true);
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Asean, AseanViewHolder>(options) {
             @Override
-            public void onClick(Asean asean) {
-                startActivity(new Intent(MainActivity.this, MenuActivity.class)
-                        .putExtra(KeyAsean.ASIAN, Parcels.wrap(asean)));
+            protected void onBindViewHolder(AseanViewHolder viewHolder, int position, final Asean asean) {
+                viewHolder.textViewName.setText(asean.getName());
+                StorageReference storageRef = storage.getReference();
+                final StorageReference image = storageRef.child(asean.getFlag_image()+".png");
+                Glide.with(viewHolder.itemView.getContext())
+                        .using(new FirebaseImageLoader())
+                        .load(image)
+                        .into(viewHolder.imageViewFlag);
+                viewHolder.setOnClickListener(new AseanViewHolder.ClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        startActivity(new Intent(MainActivity.this, MenuActivity.class)
+                                .putExtra(KeyAsean.ASEAN, Parcels.wrap(asean)));
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public AseanViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+                return new AseanViewHolder(inflater.inflate(R.layout.custom_item_asean, viewGroup, false));
+            }
+        };
+
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int friendlyMessageCount = mFirebaseAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                // to the bottom of the list to show the newly added message.
+                if (lastVisiblePosition == -1 || (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                    recycler.scrollToPosition(positionStart);
+                }
             }
         });
-        recycler.setAdapter(adapter);
+        recycler.setLayoutManager(mLinearLayoutManager);
+        recycler.setAdapter(mFirebaseAdapter);
+
 
     }
 
-    public void setRealmAdapter(RealmResults<Asean> books) {
 
-        //        RealmAseanAdapter realmAdapter = new RealmAseanAdapter(this.getApplicationContext(), books, true);
-        RealmAseanAdapter realmAdapter = new RealmAseanAdapter(realm.where(Asean.class).findAll());
-        // Set the data and tell the RecyclerView to draw
-        adapter.setRealmAdapter(realmAdapter);
-        adapter.notifyDataSetChanged();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mFirebaseAdapter != null) {
+            mFirebaseAdapter.startListening();
+        }
     }
 
-    private void setRealmData() {
-        ArrayList<Asean> aseanList = new ArrayList<>();
-
-        try {
-            JSONObject jsonAssets = new JSONObject(loadJSONFromAsset("asean.json"));
-            JSONArray aseans = jsonAssets.getJSONArray("asean");
-
-            for (int i = 0; i < aseans.length(); i++) {
-
-                JSONObject object = aseans.getJSONObject(i);
-
-                Asean asean = new Asean();
-
-                asean.setId(Integer.parseInt(object.getString("id")));
-                asean.setName(object.getString("name"));
-                asean.setFlag_image(object.getString("flag_image"));
-
-                asean.setCity(object.getString("city"));
-                asean.setLanguage(object.getString("language"));
-                asean.setPopulation(object.getString("population"));
-                asean.setReligion(object.getString("religion"));
-                asean.setRegime(object.getString("regime"));
-                asean.setFlower_detail(object.getString("flower_detail"));
-                asean.setNational_dress_detail(object.getString("national_dress_detail"));
-
-                asean.setFlag_image(object.getString("flag_image"));
-                asean.setFlower_image(object.getString("flower_image"));
-                asean.setNational_dress_image(object.getString("national_dress_image"));
-
-                try {
-                    JSONObject jsonAssetsFood = new JSONObject(loadJSONFromAsset("food.json"));
-                    JSONArray foods = jsonAssetsFood.getJSONArray("food");
-                    RealmList<AseanItem> foodsItems = new RealmList<AseanItem>();
-                    for (int j = 0; j < foods.length(); j++) {
-
-                        JSONObject foodObject = foods.getJSONObject(j);
-
-                        if (foodObject.getString("id").equals((object.getString("id")))) {
-                          Log.d(TAG, "aaaaaaa");
-
-                            AseanItem aseanItem = new AseanItem();
-
-
-                            //JSONObject c = aseans.getJSONObject(i);
-
-                            aseanItem.setItem_image(foodObject.getString("food_image"));
-                            aseanItem.setItem_name(foodObject.getString("food_name"));
-                            aseanItem.setItem_detail(foodObject.getString("food_detail"));
-
-                            foodsItems.add(aseanItem);
-                        }
-
-                    }
-                        asean.setFood(foodsItems);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    JSONObject jsonAssetsTravel = new JSONObject(loadJSONFromAsset("travel.json"));
-                    JSONArray travels = jsonAssetsTravel.getJSONArray("travel");
-                    RealmList<AseanItem> travelItems = new RealmList<AseanItem>();
-
-                    for (int k = 0; k < travels.length(); k++) {
-
-                        JSONObject travelObject = travels.getJSONObject(k);
-
-                        if (travelObject.getString("id").equals((object.getString("id")))) {
-                            AseanItem aseanItem = new AseanItem();
-
-                            //JSONObject c = aseans.getJSONObject(i);
-
-                            aseanItem.setItem_image(travelObject.getString("travel_image"));
-                            aseanItem.setItem_name(travelObject.getString("travel_name"));
-                            aseanItem.setItem_detail(travelObject.getString("travel_detail"));
-
-                            travelItems.add(aseanItem);
-                        }
-
-                    }
-                    asean.setTravel(travelItems);
-
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    JSONObject jsonAssetsMoney = new JSONObject(loadJSONFromAsset("money.json"));
-                    JSONArray moneys = jsonAssetsMoney.getJSONArray("money");
-
-                    for (int z= 0; z < moneys.length(); z++) {
-
-                        JSONObject moneyObject = moneys.getJSONObject(z);
-
-                        if (moneyObject.getString("id").equals((object.getString("id")))) {
-                            AseanItemMoney aseanItemMoney = new AseanItemMoney();
-                            aseanItemMoney.setItem_money_a(moneyObject.getString("money_image_a"));
-                            aseanItemMoney.setItem_money_b(moneyObject.getString("money_image_b"));
-                            aseanItemMoney.setItem_money_name(moneyObject.getString("money_detail_1")
-                                    +"\n"+moneyObject.getString("money_detail_2")
-                                    +"\n"+moneyObject.getString("money_detail_3")
-                                    +"\n"+moneyObject.getString("money_detail_4")
-                                    +"\n"+moneyObject.getString("money_detail_5")
-
-                            );
-                            asean.setMoney(aseanItemMoney);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                aseanList.add(asean);
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mFirebaseAdapter != null) {
+            mFirebaseAdapter.stopListening();
         }
-
-
-
-        for (Asean asean : aseanList) {
-            // Persist your data easily
-            realm.beginTransaction();
-            realm.copyToRealm(asean);
-            realm.commitTransaction();
-        }
-        Prefs.with(this).setPreLoad(true);
     }
 
 
@@ -251,8 +194,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return json;
     }
-
-
 
 
 }

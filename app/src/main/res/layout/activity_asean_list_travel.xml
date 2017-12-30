@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.asean.AseanListTravelActivity">
 
-    <ListView
-        android:id="@+id/list_view_travel"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rc_travel"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

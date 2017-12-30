@@ -1,24 +1,25 @@
 package com.example.asean.model;
 
-import com.example.asean.realm.AseanItemListParcelConverter;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelPropertyConverter;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import io.realm.AseanRealmProxy;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+//import io.realm.AseanRealmProxy;
 
 /**
  * Created by lalit on 9/12/2016.
  */
-@Parcel(implementations = { AseanRealmProxy.class }, value = Parcel.Serialization.BEAN, analyze = { Asean.class })
-public class Asean extends RealmObject{
+@Parcel
+@IgnoreExtraProperties
+public class Asean {
 
-    @PrimaryKey
+    //    @PrimaryKey
     private int id;
     private String name;
     private String flag_image;
@@ -32,39 +33,15 @@ public class Asean extends RealmObject{
     private String flower_detail;
     private String national_dress_image;
     private String national_dress_detail;
-    private RealmList<AseanItem> travel;
-    private RealmList<AseanItem> food;
+    private Map<String, AseanItem> travel;
+    private List<AseanItem> food;
     private AseanItemMoney money;
 
     public Asean() {
-        // TODO Auto-generated constructor stub
     }
 
-//    public Asean(int id, String name, String flag_image, String city,
-//                        String language, String population, String religion, String regime, String flower_name,
-//                        String flower_image, String flower_detail, String national_dress_image,
-//                        String national_dress_detail, AseanItem travel, AseanItem food, AseanItemMoney money) {
-//        super();
-//        this.id = id;
-//        this.name = name;
-//        this.flag_image = flag_image;
-//        this.city = city;
-//        this.language = language;
-//        this.population = population;
-//        this.religion = religion;
-//        this.regime = regime;
-//        this.flower_name = flower_name;
-//        this.flower_image = flower_image;
-//        this.flower_detail = flower_detail;
-//        this.national_dress_image = national_dress_image;
-//        this.national_dress_detail = national_dress_detail;
-//        this.travel = travel;
-//        this.food = food;
-//        this.money = money;
-//    }
-
     public int getId() {
-        return id;
+        return id-1;
     }
 
     public void setId(int id) {
@@ -168,45 +145,34 @@ public class Asean extends RealmObject{
     }
 
 
-    public ArrayList<AseanItem> getTravel() {
-        return new ArrayList<>(travel);
+//    public ArrayList<AseanItem> getTravel() {
+//        ArrayList<AseanItem> aseanItems = new ArrayList<>();
+//        aseanItems.addAll(travel.values());
+//        return aseanItems;
+//    }
+
+//    public void setTravel(ArrayList<AseanItem> travel) {
+//        this.travel = travel;
+//    }
+
+    public ArrayList<AseanItem> getFood() {
+
+        return new ArrayList<AseanItem>(food);
     }
 
-    @ParcelPropertyConverter(AseanItemListParcelConverter.class)
-    public void setTravel(RealmList<AseanItem>  travel) {
-        this.travel = travel;
-    }
-
-    public ArrayList<AseanItem>  getFood() {
-        return new ArrayList<>(food);
-    }
-
-    @ParcelPropertyConverter(AseanItemListParcelConverter.class)
-    public void setFood(RealmList<AseanItem>  food) {
+    public void setFood(ArrayList<AseanItem> food) {
         this.food = food;
     }
 
-    public void addFood(AseanItem aseanItem){
+    public void addFood(AseanItem aseanItem) {
         this.food.add(aseanItem);
     }
 
-    public void addTravel(AseanItem aseanItem){
+/*    public void addTravel(AseanItem aseanItem) {
         this.travel.add(aseanItem);
-    }
+    }*/
 
-    public void removeFood(AseanItem aseanItem){
-        this.food.remove(aseanItem);
-    }
-
-    public void removeTravel(AseanItem aseanItem){
-        this.travel.remove(aseanItem);
-    }
     public AseanItemMoney getMoney() {
         return money;
     }
-
-    public void setMoney(AseanItemMoney money) {
-        this.money = money;
-    }
-
 }

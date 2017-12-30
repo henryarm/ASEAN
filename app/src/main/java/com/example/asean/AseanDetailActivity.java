@@ -10,11 +10,15 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.asean.adapter.AseanAdapter;
+//import com.example.asean.adapter.AseanAdapter;
+import com.bumptech.glide.Glide;
 import com.example.asean.model.Asean;
 import com.example.asean.model.AseanItem;
 import com.example.asean.model.KeyAsean;
-import com.squareup.picasso.Picasso;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+//import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +48,7 @@ public class AseanDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_asean_detail);
 
         asean = Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.DETAIL));
+        final FirebaseStorage storage = FirebaseStorage.getInstance();
 
 
         initView();
@@ -56,18 +61,27 @@ public class AseanDetailActivity extends AppCompatActivity {
         textViewRegime.setText(asean.getRegime());
         textViewFlowerDetail.setText(asean.getFlower_detail());
         textViewDressDetail.setText(asean.getNational_dress_detail());
-//
-        String strFlag = asean.getFlag_image();
-        String strFlowerImage = asean.getFlower_image();
-        String strDressImage = asean.getNational_dress_image();
-        imageFlag = getResources().getIdentifier(strFlag, "drawable", getPackageName());
-        imageFlower = getResources().getIdentifier(strFlowerImage, "drawable", getPackageName());
-        imageDress = getResources().getIdentifier(strDressImage, "drawable", getPackageName());
 
         try {
-            Picasso.with(AseanDetailActivity.this).load(imageFlag).into(imageViewFlag);
-            Picasso.with(AseanDetailActivity.this).load(imageFlower).into(imageViewFlower);
-            Picasso.with(AseanDetailActivity.this).load(imageDress).into(imageViewDress);
+            StorageReference storageRef = storage.getReference();
+            final StorageReference image_flag = storageRef.child(asean.getFlag_image()+".png");
+            final StorageReference image_flower = storageRef.child(asean.getFlower_image()+".png");
+            final StorageReference image_dress = storageRef.child(asean.getNational_dress_image()+".png");
+
+            Glide.with(this)
+                    .using(new FirebaseImageLoader())
+                    .load(image_flag)
+                    .into(imageViewFlag);
+            Glide.with(this)
+                    .using(new FirebaseImageLoader())
+                    .load(image_flower)
+                    .into(imageViewFlower);
+            Glide.with(this)
+                    .using(new FirebaseImageLoader())
+                    .load(image_dress)
+                    .into(imageViewDress);
+
+
         } catch (Error err) {
             imageViewFlag.setImageResource(R.mipmap.ic_launcher);
             imageViewFlower.setImageResource(R.mipmap.ic_launcher);

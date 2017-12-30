@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.asean.model.AseanItemMoney;
 import com.example.asean.model.KeyAsean;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,8 +50,8 @@ public class AseanListMoneyActivity extends AppCompatActivity {
         int imageFlower = getResources().getIdentifier(strMoneyB, "drawable", getPackageName());
 
         try {
-            Picasso.with(AseanListMoneyActivity.this).load(imageFlag).into(imageViewBankA);
-            Picasso.with(AseanListMoneyActivity.this).load(imageFlower).into(imageViewBankB);
+//            Picasso.with(AseanListMoneyActivity.this).load(imageFlag).into(imageViewBankA);
+//            Picasso.with(AseanListMoneyActivity.this).load(imageFlower).into(imageViewBankB);
         } catch (Error err) {
             imageViewBankA.setImageResource(R.mipmap.ic_launcher);
             imageViewBankB.setImageResource(R.mipmap.ic_launcher);

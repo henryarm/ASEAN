@@ -18,7 +18,6 @@ import com.example.asean.adapter.AseanItemAdapter;
 import com.example.asean.model.Asean;
 import com.example.asean.model.AseanItem;
 import com.example.asean.model.KeyAsean;
-import com.example.asean.realm.RealmController;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,15 +28,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import io.realm.Realm;
-import io.realm.RealmList;
-
 public class AseanListFoodActivity extends AppCompatActivity {
 
     private static final String TAG = "AseanListFoodActivity";
     private static final int REQUEST_CODE_ADD_ITEM = 99;
     private ListView listViewItem;
-    private Realm realm;
     private Asean asean;
     private AseanItemAdapter adapter;
     private ArrayList<AseanItem> foods;
@@ -53,14 +48,12 @@ public class AseanListFoodActivity extends AppCompatActivity {
 //        asean = Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.DETAIL));
         id = ((Asean) Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.DETAIL))).getId();
 
-        asean = RealmController.getInstance().getAseans(id);
         foods = asean.getFood();
         listViewItem = (ListView) findViewById(R.id.list_view_food);
 
         adapter = new AseanItemAdapter(getApplicationContext(), R.layout.custom_item_asean_detail, foods);
         listViewItem.setAdapter(adapter);
 
-        this.realm = RealmController.with(this).getRealm();
 
 
         listViewItem.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -86,7 +79,7 @@ public class AseanListFoodActivity extends AppCompatActivity {
                                 showToast("EDIT");
                                 break;
                             case 1:
-                                RealmController.getInstance().removeAseanFood(id,food,adapter);
+//                                RealmController.getInstance().removeAseanFood(id,food,adapter);
                                 showToast("DELETE SUCCESS");
 
                                 break;
@@ -110,7 +103,7 @@ public class AseanListFoodActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        asean = RealmController.getInstance().getAseans(id);
+//        asean = RealmController.getInstance().getAseans(id);
         foods = asean.getFood();
         adapter.notifyDataSetChanged();
     }
@@ -141,7 +134,7 @@ public class AseanListFoodActivity extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
                 AseanItem aseanItem = Parcels.unwrap(data.getParcelableExtra(KeyAsean.ASEANITEM));
 
-                RealmController.getInstance().addAseanFood(asean.getId(),aseanItem,adapter);
+//                RealmController.getInstance().addAseanFood(asean.getId(),aseanItem,adapter);
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {

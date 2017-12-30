@@ -1,18 +1,18 @@
 package com.example.asean.model;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import org.parceler.Parcel;
 
-import io.realm.AseanItemRealmProxy;
-import io.realm.AseanRealmProxy;
-import io.realm.RealmObject;
-
+//import io.realm.AseanRealmProxy;
 /**
  * Created by lalit on 9/12/2016.
  */
+@Parcel
+@IgnoreExtraProperties
+public class AseanItem{
 
-@Parcel(implementations = { AseanItemRealmProxy.class }, value = Parcel.Serialization.BEAN, analyze = { AseanItem.class })
-public class AseanItem extends RealmObject {
-
+    private int id;
     private String item_name;
     private String item_detail;
     private String item_image;
@@ -54,4 +54,12 @@ public class AseanItem extends RealmObject {
         this.item_image = item_image;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
+

@@ -2,14 +2,12 @@ package com.example.asean.model;
 
 import org.parceler.Parcel;
 
-import io.realm.AseanItemMoneyRealmProxy;
-import io.realm.RealmObject;
 
 /**
  * Created by lalit on 9/12/2016.
  */
-@Parcel(implementations = { AseanItemMoneyRealmProxy.class }, value = Parcel.Serialization.BEAN, analyze = { AseanItemMoney.class })
-public class AseanItemMoney extends RealmObject{
+@Parcel
+public class AseanItemMoney {
 
     private String item_money_name;
     private String item_money_a;

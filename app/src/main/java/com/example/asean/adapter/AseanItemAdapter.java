@@ -15,7 +15,7 @@ import com.example.asean.R;
 import com.example.asean.ShowImageActivity;
 import com.example.asean.model.Asean;
 import com.example.asean.model.AseanItem;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -64,7 +64,7 @@ public class AseanItemAdapter extends ArrayAdapter<AseanItem> {
         if (resID != 0){
             try {
                 Log.i("Asean adpater","Jay check resID : " + resID);
-                Picasso.with(getContext()).load(resID).into(holder.imageViewImage);
+//                Picasso.with(getContext()).load(resID).into(holder.imageViewImage);
             } catch (Error err) {
                 holder.imageViewImage.setImageResource(R.drawable.icon_image);
             }

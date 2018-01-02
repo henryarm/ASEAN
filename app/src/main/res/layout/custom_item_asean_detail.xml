@@ -25,10 +25,10 @@
         <TextView
             android:id="@+id/text_view_list_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:text="รายละเอียด"
             android:textColor="#000000" />
 
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:layout_marginLeft="20dp"
             android:text="รายละเอียด"
             android:textColor="#000000" />

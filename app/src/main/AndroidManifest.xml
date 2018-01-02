@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".AseanDetailActivity" />
         <activity android:name=".MenuActivity" />
-        <activity android:name=".AseanListTravelActivity" />
+        <activity android:name=".AseanListItemActivity" />
         <activity android:name=".AseanListFoodActivity" />
         <activity android:name=".AseanListMoneyActivity" />
         <activity android:name=".ShowImageActivity" />

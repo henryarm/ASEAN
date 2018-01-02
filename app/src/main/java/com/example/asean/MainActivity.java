@@ -35,6 +35,7 @@ import com.example.asean.model.KeyAsean;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.firebasedevday.library.BaseActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +60,7 @@ import java.util.HashMap;
 //import io.realm.RealmList;
 //import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
     private SearchView searchView;
@@ -102,12 +103,25 @@ public class MainActivity extends AppCompatActivity {
 ////                mTextView.setText("Failed: " + databaseError.getMessage());
 //            }
 //        });
+        showLoading();
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                hideLoading();
+//                dataSnapshot.getRef().removeEventListener(this);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError error) {
+                hideLoading();
+                showAlert(R.string.load_failure);
+            }
+        });
         FirebaseRecyclerOptions<Asean> options = new FirebaseRecyclerOptions.Builder<Asean>()
                 .setQuery(mRef, Asean.class)
                 .build();
-        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-//        mLinearLayoutManager.setStackFromEnd(true);
+        final LinearLayoutManager mLinearLayoutManager =  new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Asean, AseanViewHolder>(options) {
             @Override
             protected void onBindViewHolder(AseanViewHolder viewHolder, int position, final Asean asean) {
@@ -148,9 +162,9 @@ public class MainActivity extends AppCompatActivity {
                 int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
                 // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
                 // to the bottom of the list to show the newly added message.
-                if (lastVisiblePosition == -1 || (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    recycler.scrollToPosition(positionStart);
-                }
+//                if (lastVisiblePosition == -1 || (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+//                    recycler.scrollToPosition(positionStart);
+//                }
             }
         });
         recycler.setLayoutManager(mLinearLayoutManager);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Parcel;
 import android.provider.MediaStore;
@@ -20,14 +21,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.asean.model.Asean;
 import com.example.asean.model.AseanItem;
 import com.example.asean.model.KeyAsean;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.firebasedevday.library.BaseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -46,48 +52,52 @@ public class AddItemActivity extends BaseActivity {
 
     private static final String TAG = "AddItemActivity";
     private static final int REQUEST_CODE_CHOOSE_PICTURE_FROM_GALLARY = 99;
-    private EditText edName,edDetail;
+    private EditText edName, edDetail;
     private AseanItem aseanItem;
     private ImageView imageView;
     DatabaseReference mRef;
     private StorageReference storageReference;
-    private Bitmap bitmap;
     int id;
+    String key;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
         id = ((Asean) Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.DETAIL))).getId();
+        key = getIntent().getStringExtra(KeyAsean.KEY);
 
-        initView();
+        String type = getIntent().getStringExtra(KeyAsean.TYPE);
+
         DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        mRef = mRootRef.child("asean").child(String.valueOf(id)).child("travel");
+        mRef = mRootRef.child("asean").child(String.valueOf(id)).child(type);
         final FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         aseanItem = new AseanItem();
 
-        bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.icon_image);
+
+        initView();
 
     }
 
     @SuppressLint("ShowToast")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_save:
-                if (isEmpty(edName) || isEmpty(edDetail)){
-                    Toast.makeText(AddItemActivity.this, "กรุณากรอกข้อความให้ครบถ้วน", Toast.LENGTH_LONG).show();
-//                    Log.d(TAG, "error");
-                }
-                else{
+                if (isEmpty(edName) || isEmpty(edDetail)) {
+                    showAlert("กรุณากรอกข้อความให้ครบถ้วน");
+                } else {
+                    showLoading();
                     aseanItem.setId(id);
-//                    aseanItem.setItem_image(edName.getText().toString());
                     aseanItem.setItem_name(edName.getText().toString());
                     aseanItem.setItem_detail(edDetail.getText().toString());
 
+                    imageView.setDrawingCacheEnabled(true);
+                    imageView.buildDrawingCache(true);
+                    Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+                    imageView.setDrawingCacheEnabled(false);
                     putImage(bitmap);
                 }
                 break;
@@ -99,11 +109,11 @@ public class AddItemActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.save_menu,menu);
+        getMenuInflater().inflate(R.menu.save_menu, menu);
         return true;
     }
 
-    public void initView(){
+    public void initView() {
 
         edName = (EditText) findViewById(R.id.name);
         edDetail = (EditText) findViewById(R.id.detail);
@@ -112,9 +122,46 @@ public class AddItemActivity extends BaseActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            chooseImage();
+                chooseImage();
             }
         });
+
+        if (key != null) {
+            DatabaseReference reference = mRef.child(key);
+            showLoading();
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    hideLoading();
+                    dataSnapshot.getRef().removeEventListener(this);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    hideLoading();
+                    showAlert(R.string.load_failure);
+                }
+            });
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    aseanItem = dataSnapshot.getValue(AseanItem.class);
+                    edName.setText(aseanItem.getItem_name());
+                    edDetail.setText(aseanItem.getItem_detail());
+                    final StorageReference image = storageReference.child(aseanItem.getItem_image()+".jpg");
+                    Glide.with(AddItemActivity.this)
+                            .using(new FirebaseImageLoader())
+                            .load(image)
+                            .into(imageView);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e(TAG, databaseError.toString());
+                }
+            });
+        }
+
     }
 
 //    @Override
@@ -158,9 +205,9 @@ public class AddItemActivity extends BaseActivity {
     }
 
     private void uploadFileToStorage(final DatabaseReference databaseReference, Bitmap bitmap, String filename) {
-        StorageReference photoReference = storageReference.child(filename + ".png");
+        StorageReference photoReference = storageReference.child(filename + ".jpg");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
         byte[] data = byteArrayOutputStream.toByteArray();
         UploadTask uploadTask = photoReference.putBytes(data);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -177,15 +224,18 @@ public class AddItemActivity extends BaseActivity {
     }
 
     private void onUploadPhotoSuccess(DatabaseReference databaseReference, UploadTask.TaskSnapshot taskSnapshot) {
+        hideLoading();
         aseanItem.setItem_image(databaseReference.getKey());
         databaseReference.setValue(aseanItem);
         Intent returnIntent = new Intent();
         returnIntent.putExtra(KeyAsean.ASEANITEM, Parcels.wrap(aseanItem));
-        setResult(Activity.RESULT_OK,returnIntent);
+        returnIntent.putExtra(KeyAsean.KEY, key);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
     private void onUploadPhotoFailure() {
+        hideLoading();
         showAlert("Can\\'t upload photo to server. Please try again later.");
     }
 
@@ -196,7 +246,7 @@ public class AddItemActivity extends BaseActivity {
                 resultCode == RESULT_OK) {
             try {
                 Bitmap pickedPhoto = new EZPhotoPickStorage(this).loadLatestStoredPhotoBitmap();
-                bitmap = pickedPhoto;
+//                bitmap = pickedPhoto;
                 imageView.setImageBitmap(pickedPhoto);
 //                putImage(pickedPhoto);
             } catch (IOException e) {
@@ -205,7 +255,6 @@ public class AddItemActivity extends BaseActivity {
             }
         }
     }
-
 
 
 }

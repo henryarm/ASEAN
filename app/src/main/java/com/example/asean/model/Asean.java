@@ -153,20 +153,20 @@ public class Asean {
 
 //    public void setTravel(ArrayList<AseanItem> travel) {
 //        this.travel = travel;
+////    }
+//
+//    public ArrayList<AseanItem> getFood() {
+//
+//        return new ArrayList<AseanItem>(food);
 //    }
-
-    public ArrayList<AseanItem> getFood() {
-
-        return new ArrayList<AseanItem>(food);
-    }
-
-    public void setFood(ArrayList<AseanItem> food) {
-        this.food = food;
-    }
-
-    public void addFood(AseanItem aseanItem) {
-        this.food.add(aseanItem);
-    }
+//
+//    public void setFood(ArrayList<AseanItem> food) {
+//        this.food = food;
+//    }
+//
+//    public void addFood(AseanItem aseanItem) {
+//        this.food.add(aseanItem);
+//    }
 
 /*    public void addTravel(AseanItem aseanItem) {
         this.travel.add(aseanItem);

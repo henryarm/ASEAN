@@ -18,8 +18,8 @@
 
             <ImageView
                 android:id="@+id/image_view_flag_detail"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
+                android:layout_width="240dp"
+                android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/img_brunei"/>
@@ -82,8 +82,8 @@
 
             <ImageView
                 android:id="@+id/image_view_flower"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
+                android:layout_width="240dp"
+                android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25dp"
                 android:src="@drawable/flower_img_brunei"/>
@@ -99,8 +99,8 @@
 
             <ImageView
                 android:id="@+id/image_view_dress"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
+                android:layout_width="240dp"
+                android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25dp"
                 android:src="@drawable/dress_img_brunei"/>

@@ -2,9 +2,12 @@
     <string name="app_name">ASEAN</string>
     <string name="add">ADD</string>
     <string name="save">save</string>
+    <string name="load_failure">Connection Error</string>
 
     <string-array name="action">
         <item>Edit</item>
         <item>Delete</item>
     </string-array>
+
+
 </resources>

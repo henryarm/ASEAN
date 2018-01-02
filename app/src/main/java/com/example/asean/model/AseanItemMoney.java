@@ -9,45 +9,81 @@ import org.parceler.Parcel;
 @Parcel
 public class AseanItemMoney {
 
-    private String item_money_name;
-    private String item_money_a;
-    private String item_money_b;
+    private String money_detail_1;
+    private String money_detail_2;
+    private String money_detail_3;
+    private String money_detail_4;
+    private String money_detail_5;
+
+    private String money_image_a;
+    private String money_image_b;
 
 
     public AseanItemMoney() {
         // TODO Auto-generated constructor stub
     }
 
-    public AseanItemMoney(String item_money_name, String item_money_a, String item_money_b) {
-
-        super();
-        this.item_money_name = item_money_name;
-        this.item_money_a = item_money_a;
-        this.item_money_b = item_money_b;
+    public String getMoney_detail_1() {
+        return money_detail_1;
     }
 
-    public String getItem_money_name() {
-        return item_money_name;
+    public void setMoney_detail_1(String money_detail_1) {
+        this.money_detail_1 = money_detail_1;
     }
 
-    public void setItem_money_name(String item_money_name) {
-        this.item_money_name = item_money_name;
+    public String getMoney_detail_2() {
+        return money_detail_2;
     }
 
-    public String getItem_money_a() {
-        return item_money_a;
+    public void setMoney_detail_2(String money_detail_2) {
+        this.money_detail_2 = money_detail_2;
     }
 
-    public void setItem_money_a(String item_money_a) {
-        this.item_money_a = item_money_a;
+    public String getMoney_detail_3() {
+        return money_detail_3;
     }
 
-    public String getItem_money_b() {
-        return item_money_b;
+    public void setMoney_detail_3(String money_detail_3) {
+        this.money_detail_3 = money_detail_3;
     }
 
-    public void setItem_money_b(String item_money_b) {
-        this.item_money_b = item_money_b;
+    public String getMoney_detail_4() {
+        return money_detail_4;
     }
 
+    public void setMoney_detail_4(String money_detail_4) {
+        this.money_detail_4 = money_detail_4;
+    }
+
+    public String getMoney_detail_5() {
+        return money_detail_5;
+    }
+
+    public void setMoney_detail_5(String money_detail_5) {
+        this.money_detail_5 = money_detail_5;
+    }
+
+    public String getMoney_image_a() {
+        return money_image_a;
+    }
+
+    public void setMoney_image_a(String money_image_a) {
+        this.money_image_a = money_image_a;
+    }
+
+    public String getMoney_image_b() {
+        return money_image_b;
+    }
+
+    public void setMoney_image_b(String money_image_b) {
+        this.money_image_b = money_image_b;
+    }
+
+    public String getDetail(){
+        return
+//                money_detail_2+" "+
+                money_detail_3+" "+
+//                money_detail_4+" "+
+                money_detail_5+" ";
+    }
 }

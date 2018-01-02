@@ -2,10 +2,8 @@ package com.example.asean;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,8 +11,6 @@ import com.example.asean.model.Asean;
 import com.example.asean.model.KeyAsean;
 
 import org.parceler.Parcels;
-
-import java.security.Key;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -34,10 +30,10 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         asean = Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.ASEAN));
-
+        aseanName = asean.getName();
 //        Log.d(TAG, asean.getMoney().getItem_money_a());
 //
-//        Log.d(TAG, asean.getMoney().getItem_money_name());
+//        Log.d(TAG, asean.getMoney().getMoney_detail_1());
         initView();
     }
 
@@ -70,16 +66,18 @@ public class MenuActivity extends AppCompatActivity {
         buttonTravel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MenuActivity.this, AseanListTravelActivity.class)
-                        .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean)));
+                startActivity(new Intent(MenuActivity.this, AseanListItemActivity.class)
+                        .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean))
+                        .putExtra(KeyAsean.TYPE,KeyAsean.TRAVEL));
             }
         });
 
         buttonFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MenuActivity.this, AseanListFoodActivity.class)
-                        .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean)));
+                startActivity(new Intent(MenuActivity.this, AseanListItemActivity.class)
+                        .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean))
+                        .putExtra(KeyAsean.TYPE,KeyAsean.FOOD));
             }
         });
 
@@ -87,7 +85,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MenuActivity.this, AseanListMoneyActivity.class)
-                        .putExtra(KeyAsean.MONEY,Parcels.wrap(asean.getMoney())));
+                        .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean)));
             }
         });
 

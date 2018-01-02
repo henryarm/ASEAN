@@ -2,8 +2,8 @@ package com.example.asean;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Parcel;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -31,30 +27,25 @@ import com.example.asean.model.KeyAsean;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.firebasedevday.library.BaseActivity;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-//import com.example.asean.realm.RealmController;
-//import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 
-public class AseanListTravelActivity extends AppCompatActivity {
+public class AseanListItemActivity extends BaseActivity {
 
-    private static final String TAG = "AseanListTravelActivity";
-    private static final int REQUEST_CODE_ADD_ITEM = 99;
+    private static final String TAG = "AseanListItemActivity";
+    private static final int REQUEST_CODE_ADD_ITEM = 99,REQUEST_CODE_EDIT_ITEM = 98;
     private RecyclerView recyclerView;
     private Asean asean;
     private AseanItemAdapter adapter;
@@ -66,16 +57,18 @@ public class AseanListTravelActivity extends AppCompatActivity {
     private ArrayList<String> keys = new ArrayList<>();
     private DatabaseReference mRef;
     private FirebaseStorage storage;
+    private String type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asean_list_travel);
 
         asean = ((Asean) Parcels.unwrap(getIntent().getParcelableExtra(KeyAsean.DETAIL)));
-        id = asean.getId();
+        type = getIntent().getStringExtra(KeyAsean.TYPE);
 
+        id = asean.getId();
         DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        mRef = mRootRef.child("asean").child(String.valueOf(id)).child("travel");
+        mRef = mRootRef.child("asean").child(String.valueOf(id)).child(type);
 
         storage = FirebaseStorage.getInstance();
 
@@ -83,6 +76,20 @@ public class AseanListTravelActivity extends AppCompatActivity {
         recycler = (RecyclerView) findViewById(R.id.rc_travel);
 
         adapter = new AseanItemAdapter(getApplicationContext(), R.layout.custom_item_asean_detail, travels);
+        showLoading();
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                hideLoading();
+                dataSnapshot.getRef().removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                hideLoading();
+                showAlert(R.string.load_failure);
+            }
+        });
         mRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -96,7 +103,7 @@ public class AseanListTravelActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                storage.getReference().child(dataSnapshot.getKey()+".png").delete();
+                storage.getReference().child(dataSnapshot.getKey()+".jpg").delete();
                 keys.remove(dataSnapshot.getKey());
             }
 
@@ -113,15 +120,17 @@ public class AseanListTravelActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<AseanItem> options = new FirebaseRecyclerOptions.Builder<AseanItem>()
                 .setQuery(mRef, AseanItem.class)
                 .build();
-        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setStackFromEnd(true);
+        final LinearLayoutManager mLinearLayoutManager =  new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
         mFirebaseAdapter = new FirebaseRecyclerAdapter<AseanItem, AseanItemViewHolder>(options) {
             @Override
             protected void onBindViewHolder(AseanItemViewHolder viewHolder, int position, final AseanItem aseanItem) {
+                viewHolder.textViewTitle.setTypeface(null, Typeface.BOLD);
+                viewHolder.textViewTitle.setPaintFlags( viewHolder.textViewTitle.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
                 viewHolder.textViewTitle.setText(aseanItem.getItem_name());
                 viewHolder.textViewDescription.setText(aseanItem.getItem_detail());
                 StorageReference storageRef = storage.getReference();
-                final StorageReference image = storageRef.child(aseanItem.getItem_image()+".png");
+                final StorageReference image = storageRef.child(aseanItem.getItem_image()+".jpg");
                 Glide.with(viewHolder.itemView.getContext())
                         .using(new FirebaseImageLoader())
                         .load(image)
@@ -148,19 +157,6 @@ public class AseanListTravelActivity extends AppCompatActivity {
             }
         };
 
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int friendlyMessageCount = mFirebaseAdapter.getItemCount();
-                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                // to the bottom of the list to show the newly added message.
-                if (lastVisiblePosition == -1 || (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    recycler.scrollToPosition(positionStart);
-                }
-            }
-        });
         recycler.setLayoutManager(mLinearLayoutManager);
         recycler.setAdapter(mFirebaseAdapter);
 
@@ -189,14 +185,20 @@ public class AseanListTravelActivity extends AppCompatActivity {
     protected void alertDialog(int position){
 //        final AseanItem travel = travels.get(position);
         final String key = keys.get(position);
-        new MaterialDialog.Builder(AseanListTravelActivity.this)
+        new MaterialDialog.Builder(AseanListItemActivity.this)
                 .items(R.array.action)
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                         switch (position){
                             case 0:
-                                showToast("EDIT");
+//                                showToast("EDIT");
+                                startActivityForResult(
+                                        new Intent(AseanListItemActivity.this,AddItemActivity.class)
+                                                .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean))
+                                                .putExtra(KeyAsean.KEY, key)
+                                                .putExtra(KeyAsean.TYPE,type)
+                                        ,REQUEST_CODE_EDIT_ITEM);
                                 break;
                             case 1:
                                 showToast("DELETE SUCCESS");
@@ -236,7 +238,8 @@ public class AseanListTravelActivity extends AppCompatActivity {
             case R.id.action_add:
                 startActivityForResult(
                         new Intent(this,AddItemActivity.class)
-                        .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean))
+                                .putExtra(KeyAsean.DETAIL,Parcels.wrap(asean))
+                                .putExtra(KeyAsean.TYPE,type)
                         ,REQUEST_CODE_ADD_ITEM);
                 break;
             default:
@@ -252,6 +255,20 @@ public class AseanListTravelActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_ADD_ITEM) {
             if(resultCode == Activity.RESULT_OK){
                 AseanItem aseanItem = Parcels.unwrap(data.getParcelableExtra(KeyAsean.ASEANITEM));
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                Log.e(TAG, "ERROR  onActivityResult");
+
+            }
+        }
+        else if ((requestCode == REQUEST_CODE_EDIT_ITEM) ){
+            if(resultCode == Activity.RESULT_OK){
+//                AseanItem aseanItem = Parcels.unwrap(data.getParcelableExtra(KeyAsean.ASEANITEM));
+                String key = data.getStringExtra(KeyAsean.KEY);
+//                storage.getReference().child(key+".png").delete();
+//                keys.remove(key);
+                mRef.child(key).removeValue();
+
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Log.e(TAG, "ERROR  onActivityResult");
